@@ -4,11 +4,10 @@ var env = require('../config/env')
 
 console.log(process.env.CONNECTIONSTRING)
 
-let store = new MongoDBStore(
-	{
-		uri: process.env.CONNECTIONSTRING,
-		collection: 'Sessions'
-	});
+let store = new MongoDBStore({
+	uri: process.env.CONNECTIONSTRING,
+	collection: 'Sessions'
+});
 
 // Catch errors 
 store.on('error', function (error) {
