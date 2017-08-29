@@ -22,18 +22,22 @@ var store = new vuex.Store({
 		error: {},
 		loggedIn: false,
 		name: '',
-		lists: []
+		lists: [],
 	},
 	mutations: {
 		setBoards(state, data) {
 			state.boards = data
 		},
-		setActiveBoard(state, board){
+		setActiveBoard(state, board) {
 			state.activeBoard = board
 		},
-		setListsAndTasks(state, data){
+		setListsAndTasks(state, data) {
 			state.lists = data.lists
-
+			state.lists.forEach(list => {
+				list.tasks = data.tasks.filter(task => {
+					return task.listId == list._id;
+				})
+			});
 		},
 		handleError(state, err) {
 			state.error = err
@@ -71,14 +75,23 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
-		createList({ commit, dispatch }, list){
+		createList({ commit, dispatch }, list) {
 			api.post('lists/', list)
-			.then(res => {
-				dispatch('getListsAndTasks', list.boardId)
-			})
-			.catch(err => {
-				commit('handleError', err)
-			})
+				.then(res => {
+					dispatch('getListsAndTasks', list.boardId)
+				})
+				.catch(err => {
+					commit('handleError', err)
+				})
+		},
+		createTask({ commit, dispatch }, task) {
+			api.post('tasks/', task)
+				.then(res => {
+					dispatch('getListsAndTasks', task.boardId)
+				})
+				.catch(err => {
+					commit('handleError', err)
+				})
 		},
 		removeBoard({ commit, dispatch }, board) {
 			api.delete('boards/' + board._id)
@@ -89,14 +102,14 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
-		getListsAndTasks({ commit, dispatch }, id){
+		getListsAndTasks({ commit, dispatch }, id) {
 			api('/boards/' + id + '/listsAndTasks')
-			.then(res => {
-				commit('setListsAndTasks', res.data.data)
-			})
-			.catch(err => {
-				commit('handleError', err)
-			})
+				.then(res => {
+					commit('setListsAndTasks', res.data.data)
+				})
+				.catch(err => {
+					commit('handleError', err)
+				})
 		},
 		handleError({ commit, dispatch }, err) {
 			commit('handleError', err)
@@ -108,6 +121,7 @@ var store = new vuex.Store({
 				.then(res => {
 					res.data.data.loggedIn = true;
 					commit('setUser', res.data.data)
+					dispatch('getBoards');
 				}).catch(res => {
 					alert('Invalid email or password')
 				})
@@ -125,6 +139,7 @@ var store = new vuex.Store({
 		logout({ commit, dispatch }) {
 			auth.delete('logout')
 				.then(res => {
+					commit('setBoards', [])
 					commit('setUser', { name: '', loggedIn: false })
 				}).catch(err => commit('handleError', err))
 		},

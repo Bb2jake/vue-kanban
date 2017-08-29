@@ -9,15 +9,18 @@
 					</div>
 				</router-link>
 			</div>
-			<div class="col-xs-12 col-md-6 col-lg-3">
+			<div v-if="loggedIn" class="col-xs-12 col-md-6 col-lg-3">
 				<div @click="showBoardForm = true" class="panel panel-default action muted board-card">
 					<h4>Create new board</h4>
 					<!-- <span @click="removeBoard(board)"></span> -->
 				</div>
 			</div>
+			<div v-else>
+				<h1>Please login to continue.</h1>
+			</div>
 		</div>
 		<div v-if="showBoardForm" id="create-board-parent" class="panel panel-default">
-			<div class="panel-heading">Create Board</div>
+			<div class="panel-heading">Create Board <span class="action muted" @click="showBoardForm = false">x</span></div>
 			<form id="create-board-form" class="panel-body" @submit.prevent="createBoard">
 				<input type="text" maxlength="50" placeholder="board name" v-model="newBoard.name" required>
 				<input type="text" maxlength="140" placeholder="description" v-model="newBoard.description">
@@ -42,21 +45,24 @@
 		mounted() {
 			this.$store.dispatch('getBoards')
 		},
-		computed: {
-			boards() {
-				return this.$store.state.boards
-			}
-		},
 		methods: {
 			createBoard() {
 				this.newBoard.name = this.newBoard.name.trim();
-				if (this.newBoard.name){
+				if (this.newBoard.name) {
 					this.$store.dispatch('createBoard', this.newBoard)
 					this.showBoardForm = false
 				}
 			},
 			removeBoard(board) {
 				this.$store.dispatch('removeBoard', board)
+			}
+		},
+		computed: {
+			boards() {
+				return this.$store.state.boards
+			},
+			loggedIn() {
+				return this.$store.state.loggedIn;
 			}
 		}
 	}
@@ -82,6 +88,7 @@
 		align-items: center;
 		justify-content: center;
 	}
+
 	input {
 		margin-bottom: 10px;
 	}

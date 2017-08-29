@@ -6,7 +6,18 @@
 				<div class="row">
 					<div class="col-xs-12 col-md-6 col-lg-3" v-for="list in lists">
 						<div class="panel panel-default list-card">
-							<strong>{{list.name}}:</strong> {{list.description}}
+							<h4 class="panel-header"><strong>{{list.name}}:</strong> {{list.description}}</h4>
+							<div v-for="task in list.tasks">
+								<p>{{task.name}}</p>
+							</div>
+							<div class="panel-body">
+								<div class="panel panel-default">
+									<form @submit.prevent="createTask(list._id)">
+										<input type="text" placeholder="task" v-model="newTask.name">
+										<button class="btn btn-default">Create Task</button>
+									</form>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="col-xs-12 col-md-6 col-lg-3">
@@ -19,7 +30,7 @@
 			</div>
 		</div>
 		<div v-if="showListForm" id="create-list-parent" class="panel panel-default">
-			<div class="panel-heading">Create List</div>
+			<div class="panel-heading">Create List <span class="action muted" @click="showListForm = false">x</span></div>
 			<form id="create-list-form" class="panel-body" @submit.prevent="createList">
 				<input type="text" maxlength="50" placeholder="list name" v-model="newList.name" required>
 				<input type="text" maxlength="140" placeholder="description" v-model="newList.description">
@@ -40,20 +51,16 @@
 					name: '',
 					description: ''
 				},
+				newTask: {
+					// name: '',
+					// description: ''
+				},
 				showListForm: false
 			}
 		},
 		mounted() {
 			this.$store.dispatch('getBoard', this.$route.params.id)
 			this.$store.dispatch('getListsAndTasks', this.$route.params.id)
-		},
-		computed: {
-			board() {
-				return this.$store.state.activeBoard
-			},
-			lists() {
-				return this.$store.state.lists
-			}
 		},
 		methods: {
 			createList() {
@@ -64,6 +71,23 @@
 					this.showListForm = false
 					this.newList = {}
 				}
+			},
+			createTask(listId) {
+				this.newTask.name = this.newTask.name.trim();
+				if (this.newTask.name) {
+					this.newTask.listId = listId;
+					this.newTask.boardId = this.$route.params.id;
+					this.$store.dispatch('createTask', this.newTask);
+					this.newTask = {};
+				}
+			}
+		},
+		computed: {
+			board() {
+				return this.$store.state.activeBoard
+			},
+			lists() {
+				return this.$store.state.lists
 			}
 		}
 	}
@@ -71,8 +95,12 @@
 </script>
 
 <style scoped>
+	.panel {
+		padding: 10px;
+	}
+
 	.list-card {
-		height: 100px;
+		/* height: 100px; */
 		margin-top: 10px;
 	}
 

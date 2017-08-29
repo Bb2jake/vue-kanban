@@ -1,7 +1,7 @@
 <template>
 	<div class="login">
 		<div id="login-parent" class="panel panel-default">
-			<h3>Login</h3>
+			<h3>Login </h3>
 			<form id="login-form" @submit.prevent="login">
 				<input type="text" maxlength="16" placeholder="name" v-model="loginInfo.name" required>
 				<input type="password" maxlength="16" placeholder="password" v-model="loginInfo.password" required>
