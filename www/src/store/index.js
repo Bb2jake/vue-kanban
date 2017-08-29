@@ -17,23 +17,35 @@ vue.use(vuex)
 
 var store = new vuex.Store({
 	state: {
-		boards: [{ name: 'This is total rubbish' }],
+		boards: [],
 		activeBoard: {},
-		error: {}
+		error: {},
+		loggedIn: false,
+		name: '',
+		lists: []
 	},
 	mutations: {
 		setBoards(state, data) {
 			state.boards = data
 		},
+		setActiveBoard(state, board){
+			state.activeBoard = board
+		},
+		setListsAndTasks(state, data){
+			state.lists = data.lists
+
+		},
 		handleError(state, err) {
 			state.error = err
+		},
+		setUser(state, payload) {
+			state.name = payload.name;
+			state.loggedIn = payload.loggedIn;
 		}
 	},
 	actions: {
-		//when writing your auth routes (login, logout, register) be sure to use auth instead of api for the posts
-
 		getBoards({ commit, dispatch }) {
-			api('boards')
+			api('userboards')
 				.then(res => {
 					commit('setBoards', res.data.data)
 				})
@@ -51,7 +63,6 @@ var store = new vuex.Store({
 				})
 		},
 		createBoard({ commit, dispatch }, board) {
-			debugger
 			api.post('boards/', board)
 				.then(res => {
 					dispatch('getBoards')
@@ -59,6 +70,15 @@ var store = new vuex.Store({
 				.catch(err => {
 					commit('handleError', err)
 				})
+		},
+		createList({ commit, dispatch }, list){
+			api.post('lists/', list)
+			.then(res => {
+				dispatch('getListsAndTasks', list.boardId)
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
 		},
 		removeBoard({ commit, dispatch }, board) {
 			api.delete('boards/' + board._id)
@@ -69,8 +89,51 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
+		getListsAndTasks({ commit, dispatch }, id){
+			api('/boards/' + id + '/listsAndTasks')
+			.then(res => {
+				commit('setListsAndTasks', res.data.data)
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
+		},
 		handleError({ commit, dispatch }, err) {
 			commit('handleError', err)
+		},
+
+		// USER ACTIONS
+		login({ commit, dispatch }, payload) {
+			auth.post('login/', payload)
+				.then(res => {
+					res.data.data.loggedIn = true;
+					commit('setUser', res.data.data)
+				}).catch(res => {
+					alert('Invalid email or password')
+				})
+		},
+		register({ commit, dispatch }, payload) {
+			auth.post('register/', payload)
+				.then(res => {
+					res.data.data.loggedIn = true;
+					commit('setUser', res.data.data)
+					console.log(res)
+				}).catch(err => {
+					commit('handleError', err)
+				})
+		},
+		logout({ commit, dispatch }) {
+			auth.delete('logout')
+				.then(res => {
+					commit('setUser', { name: '', loggedIn: false })
+				}).catch(err => commit('handleError', err))
+		},
+		checkForSession({ commit, dispatch }) {
+			auth('authenticate')
+				.then(res => {
+					if (res.data.data)
+						commit('setUser', { name: res.data.data.name, loggedIn: true })
+				})
 		}
 	}
 

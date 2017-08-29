@@ -28,7 +28,6 @@ module.exports = {
 	}
 }
 
-
 function handleResponse(action, data, error) {
 	var response = {
 		action: action,
