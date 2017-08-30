@@ -18,12 +18,12 @@
 									</form>
 								</div>
 							</div>
+							<span  class="glyphicon glyphicon-trash" @click="removeList(list)"></span>
 						</div>
 					</div>
 					<div class="col-xs-12 col-md-6 col-lg-3">
 						<div @click="showListForm = true" class="panel panel-default action muted list-card">
 							<h4>Create new list</h4>
-							<span @click="removeList(list)"></span>
 						</div>
 					</div>
 				</div>
@@ -48,8 +48,8 @@
 		data() {
 			return {
 				newList: {
-					name: '',
-					description: ''
+					// name: '',
+					// description: ''
 				},
 				newTask: {
 					// name: '',
@@ -71,6 +71,9 @@
 					this.showListForm = false
 					this.newList = {}
 				}
+			},
+			removeList(list) {
+				this.$store.dispatch('removeList', list)
 			},
 			createTask(listId) {
 				this.newTask.name = this.newTask.name.trim();

@@ -5,10 +5,9 @@
 				<router-link :to="'/boards/'+board._id">
 					<div class="panel panel-default board-card">
 						<h4>{{board.name}}</h4>
+						<span class="glyphicon glyphicon-trash" @click.prevent.stop ="removeBoard(board)"></span>
 					</div>
 				</router-link>
-				<span class="glyphicon glyphicon-trash" @click ="removeBoard(board)"></span>
-				<span class="glyphicon glyphicon-cutlery" @click ="removeBoard(board)"></span>
 			</div>
 			<div v-if="loggedIn" class="col-xs-12 col-md-6 col-lg-3">
 				<div @click="showBoardForm = true" class="panel panel-default action muted board-card">
@@ -36,8 +35,8 @@
 		data() {
 			return {
 				newBoard: {
-					name: '',
-					description: ''
+					// name: '',
+					// description: ''
 				},
 				showBoardForm: false
 			}
@@ -51,6 +50,7 @@
 				if (this.newBoard.name) {
 					this.$store.dispatch('createBoard', this.newBoard)
 					this.showBoardForm = false
+					this.newBoard = {}
 				}
 			},
 			removeBoard(board) {
@@ -92,4 +92,10 @@
 	input {
 		margin-bottom: 10px;
 	}
+	.board-card span{
+		display: none;
+	}
+	.board-card:hover span{
+		display: initial;
+	} 
 </style>
