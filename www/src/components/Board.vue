@@ -48,8 +48,8 @@
 		data() {
 			return {
 				newList: {
-					name: '',
-					description: ''
+					// name: '',
+					// description: ''
 				},
 				newTask: {
 					// name: '',
@@ -73,6 +73,7 @@
 				}
 			},
 			createTask(listId) {
+				//debugger
 				this.newTask.name = this.newTask.name.trim();
 				if (this.newTask.name) {
 					this.newTask.listId = listId;

@@ -13,7 +13,7 @@ module.exports = {
 				.then(lists => {
 					Tasks.find({ boardId: req.params.boardId })
 						.then(tasks => {
-							let data = {lists, tasks}
+							let data = { lists, tasks }
 							res.send(handleResponse(action, data))
 						})
 						.catch(error => {

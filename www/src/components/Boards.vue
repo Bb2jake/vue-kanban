@@ -5,7 +5,7 @@
 				<router-link :to="'/boards/'+board._id">
 					<div class="panel panel-default board-card">
 						<h4>{{board.name}}</h4>
-						<!-- <span @click="removeBoard(board)"></span> -->
+						<span class="glyphicon glyphicon-trash" @click.prevent.stop="removeBoard(board)"></span>
 					</div>
 				</router-link>
 			</div>

@@ -16,7 +16,7 @@ function API(model, schema) {
 		var id = req.params.id || req.query.id || '';
 		var params = req.params.id ? req.params : {};
 		var query = req.query.with || '';
-		console.log(query)
+		console.log('query:', query)
 
 		if (id) {
 			schema.findById(id)
