@@ -23,10 +23,14 @@ var store = new vuex.Store({
 		loggedIn: false,
 		name: '',
 		lists: [],
+		comments: []
 	},
 	mutations: {
 		setBoards(state, data) {
 			state.boards = data
+		},
+		setComments(state, data){
+			state.comments = data
 		},
 		setActiveBoard(state, board) {
 			state.activeBoard = board
@@ -102,6 +106,15 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
+		removeTask({ commit, dispatch }, task) {
+			api.delete('tasks/' + task._id)
+			.then(res => {
+				dispatch('getListsAndTasks', task.boardId)
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
+		},
 		removeBoard({ commit, dispatch }, board) {
 			api.delete('boards/' + board._id)
 				.then(res => {
@@ -110,6 +123,15 @@ var store = new vuex.Store({
 				.catch(err => {
 					commit('handleError', err)
 				})
+		},
+		getComments({ commit, dispatch }, id){
+			api('/task/' + id + '/comments')
+			.then(res => {
+				commit('setComments', res.data.data)
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
 		},
 		getListsAndTasks({ commit, dispatch }, id) {
 			api('/boards/' + id + '/listsAndTasks')
