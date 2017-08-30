@@ -23,10 +23,15 @@ var store = new vuex.Store({
 		loggedIn: false,
 		name: '',
 		lists: [],
+		comments: {}
 	},
 	mutations: {
 		setBoards(state, data) {
 			state.boards = data
+		},
+		setComments(state, data){
+			vue.set(state.comments, data.taskId, data.comments)
+			// state.comments[data.taskId] = data.comments
 		},
 		setActiveBoard(state, board) {
 			state.activeBoard = board
@@ -84,6 +89,15 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
+		removeList({ commit, dispatch }, list) {
+			api.delete('lists/' + list._id)
+			.then(res => {
+				dispatch('getListsAndTasks', list.boardId)
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
+		},
 		createTask({ commit, dispatch }, task) {
 			api.post('tasks/', task)
 				.then(res => {
@@ -92,6 +106,24 @@ var store = new vuex.Store({
 				.catch(err => {
 					commit('handleError', err)
 				})
+		},
+		createComment({ commit, dispatch }, comment) {
+			api.post('comments/', comment)
+				.then(res => {
+					dispatch('getComments', comment.taskId)
+				})
+				.catch(err => {
+					commit('handleError', err)
+				})
+		},
+		removeTask({ commit, dispatch }, task) {
+			api.delete('tasks/' + task._id)
+			.then(res => {
+				dispatch('getListsAndTasks', task.boardId)
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
 		},
 		removeBoard({ commit, dispatch }, board) {
 			api.delete('boards/' + board._id)
@@ -102,6 +134,25 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
+		removeComment({ commit, dispatch }, comment) {
+			api.delete('comments/' + comment._id)
+				.then(res => {
+					dispatch('getComments', comment.taskId)
+				})
+				.catch(err => {
+					commit('handleError', err)
+				})
+		},
+		getComments({ commit, dispatch }, id){
+			api('tasks/' + id + '/comments')
+			.then(res => {
+				commit('setComments', {taskId: id, comments: res.data.data})
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
+		},
+
 		getListsAndTasks({ commit, dispatch }, id) {
 			api('/boards/' + id + '/listsAndTasks')
 				.then(res => {
