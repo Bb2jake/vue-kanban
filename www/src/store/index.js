@@ -23,14 +23,15 @@ var store = new vuex.Store({
 		loggedIn: false,
 		name: '',
 		lists: [],
-		comments: []
+		comments: {}
 	},
 	mutations: {
 		setBoards(state, data) {
 			state.boards = data
 		},
 		setComments(state, data){
-			state.comments = data
+			vue.set(state.comments, data.taskId, data.comments)
+			// state.comments[data.taskId] = data.comments
 		},
 		setActiveBoard(state, board) {
 			state.activeBoard = board
@@ -106,6 +107,15 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
+		createComment({ commit, dispatch }, comment) {
+			api.post('comments/', comment)
+				.then(res => {
+					dispatch('getComments', comment.taskId)
+				})
+				.catch(err => {
+					commit('handleError', err)
+				})
+		},
 		removeTask({ commit, dispatch }, task) {
 			api.delete('tasks/' + task._id)
 			.then(res => {
@@ -124,15 +134,25 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
+		removeComment({ commit, dispatch }, comment) {
+			api.delete('comments/' + comment._id)
+				.then(res => {
+					dispatch('getComments', comment.taskId)
+				})
+				.catch(err => {
+					commit('handleError', err)
+				})
+		},
 		getComments({ commit, dispatch }, id){
-			api('/task/' + id + '/comments')
+			api('tasks/' + id + '/comments')
 			.then(res => {
-				commit('setComments', res.data.data)
+				commit('setComments', {taskId: id, comments: res.data.data})
 			})
 			.catch(err => {
 				commit('handleError', err)
 			})
 		},
+
 		getListsAndTasks({ commit, dispatch }, id) {
 			api('/boards/' + id + '/listsAndTasks')
 				.then(res => {
