@@ -23,7 +23,7 @@
 					<div class="col-xs-12 col-md-6 col-lg-3">
 						<div @click="showListForm = true" class="panel panel-default action muted list-card">
 							<h4>Create new list</h4>
-							<!-- <span @click="removeBoard(board)"></span> -->
+							<span @click="removeList(list)"></span>
 						</div>
 					</div>
 				</div>

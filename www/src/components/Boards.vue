@@ -5,14 +5,14 @@
 				<router-link :to="'/boards/'+board._id">
 					<div class="panel panel-default board-card">
 						<h4>{{board.name}}</h4>
-						<!-- <span @click="removeBoard(board)"></span> -->
 					</div>
 				</router-link>
+				<span class="glyphicon glyphicon-trash" @click ="removeBoard(board)"></span>
+				<span class="glyphicon glyphicon-cutlery" @click ="removeBoard(board)"></span>
 			</div>
 			<div v-if="loggedIn" class="col-xs-12 col-md-6 col-lg-3">
 				<div @click="showBoardForm = true" class="panel panel-default action muted board-card">
 					<h4>Create new board</h4>
-					<!-- <span @click="removeBoard(board)"></span> -->
 				</div>
 			</div>
 			<div v-else>
