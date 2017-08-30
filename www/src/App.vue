@@ -41,6 +41,7 @@
 <script>
 	import Error from './components/Error'
 	import Login from './components/Login'
+
 	export default {
 		name: 'app',
 		components: {

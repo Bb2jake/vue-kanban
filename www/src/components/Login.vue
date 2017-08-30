@@ -37,6 +37,9 @@
 			}
 		},
 		methods: {
+			test() {
+				console.log('clicked outside')
+			},
 			login() {
 				this.trimInputs(this.loginInfo)
 				if (this.loginInfo.name) {
@@ -82,6 +85,7 @@
 			}
 		}
 	}
+
 </script>
 
 <style scoped>

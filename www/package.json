@@ -15,6 +15,7 @@
     "axios": "^0.15.3",
     "socket.io-client": "^1.7.3",
     "vue": "^2.1.10",
+    "vue-click-outside": "^1.0.6",
     "vue-router": "^2.2.0",
     "vuex": "^2.3.1"
   },
