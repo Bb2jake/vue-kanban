@@ -16,7 +16,7 @@
             </div>
         </div>
         <div v-if="showListForm" id="create-list-parent" class="panel panel-default">
-            <div class="panel-heading">Create List <span id="exit-form-btn" class="action muted" @click="showListForm = false">x</span></div>
+            <div class="panel-heading">Create List <span id="exit-form-btn" class="action muted" @click="hideListForm">x</span></div>
             <form id="create-list-form" class="panel-body" @submit.prevent="createList">
                 <input type="text" maxlength="50" placeholder="list name" v-model="newList.name" required>
                 <input type="text" maxlength="140" placeholder="description" v-model="newList.description">
@@ -44,7 +44,7 @@
                     // description: ''
                 },
                 showListForm: false,
-                listenerCaught: false
+                eventHandled: false
             }
         },
         mounted() {
@@ -62,36 +62,16 @@
                 }
             },
             closeFormListener() {
+                if (this.eventHandled) {
+                    this.eventHandled = false;
+                    return;
+                }
                 this.showListForm = true;
-                this.outsideClickOrEscapeListener('create-list-parent', () => {this.showListForm = false;})
-
-                // if (this.listenerCaught) {
-                //     this.listenerCaught = false;
-                //     return;
-                // }
-                // let _this = this;
-                // this.showListForm = true;
-                // $(document).mouseup(e => {
-                //     let createListForm = $('#create-list-parent');
-                //     // if the target of the click isn't the container nor a descendant of the container
-                //     if (!createListForm.is(e.target) && createListForm.has(e.target).length === 0) {
-                //         _this.showListForm = false;
-
-                //         let openFormBtn = $('#open-form-btn');
-                //         _this.listenerCaught = openFormBtn.is(e.target) || openFormBtn.has(e.target).length > 0;
-
-                //         $(document).unbind('mouseup');
-                //         $(document).unbind('keyup')
-                //     }
-                // });
-                // $(document).on('keyup', e => {
-                //     if (e.keyCode == 27) {
-                //         _this.showListForm = false;
-
-                //         $(document).unbind('mouseup');
-                //         $(document).unbind('keyup')
-                //     }
-                // });
+                this.outsideClickOrEscapeListener('create-list-parent', () => { this.showListForm = false; }, 'open-form-btn', (val) => { this.eventHandled = val })
+            },
+            hideListForm() {
+                this.showListForm = false;
+                this.unbindListeners();
             }
         },
         computed: {
