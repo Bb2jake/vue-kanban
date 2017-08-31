@@ -24,7 +24,8 @@ const models = {
 	},
 	comment: {
 		name: 'Comment',
-		endpoint: 'comments'
+		endpoint: 'comments',
+		// useCustomRoutes: true
 	},
 	user: {
 		name: 'User',

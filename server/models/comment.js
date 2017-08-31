@@ -8,6 +8,7 @@ var schema = new mongoose.Schema({
 	created: { type: Number, default: Date.now() },
 	// Relations
 	creatorId: { type: ObjectId, ref: models.user.name, required: true },
+	creatorName: { type: String, required: true },
 	taskId: { type: ObjectId, ref: models.task, required: true }
 });
 

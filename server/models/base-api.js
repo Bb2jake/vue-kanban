@@ -47,6 +47,7 @@ function API(model, schema) {
 
 		let model = new schema(req.body)
 		model.creatorId = req.session.uid
+		model.creatorName = req.session.username
 
 		model.save()
 			.then(data => {

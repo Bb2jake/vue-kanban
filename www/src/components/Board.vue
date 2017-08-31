@@ -1,6 +1,16 @@
 <template>
 	<div>
 		<h3>{{board.name}}</h3>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+						<form id="add-collaborator-form" @submit.prevent="addCollaborator">
+							<input type="text" maxlength="16" placeholder="Add Collaborator" v-model="newCollaborator" required>
+							<button class="btn">Add</button>
+						</form>
+				</div>
+			</div>
+		</div>
 		<div class="jumbotron">
 			<div class="container">
 				<div class="row">
@@ -44,6 +54,7 @@
 					// name: '',
 					// description: ''
 				},
+				newCollaborator: '',
 				showListForm: false,
 				eventHandled: false
 			}
@@ -61,6 +72,12 @@
 					this.$store.dispatch('createList', this.newList)
 					this.showListForm = false
 					this.newList = {}
+				}
+			},
+			addCollaborator() {
+				this.newCollaborator = this.newCollaborator.trim()
+				if (this.newCollaborator){
+					
 				}
 			},
 			closeFormListener() {
