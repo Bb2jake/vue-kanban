@@ -10,7 +10,8 @@ var schema = new mongoose.Schema({
 	// Relations
 	creatorId: { type: ObjectId, ref: models.user.name, required: true },
 	boardId: { type: ObjectId, ref: models.board, required: true },
-	listId: { type: ObjectId, ref: models.list, required: true }
+	listId: { type: ObjectId, ref: models.list, required: true },
+	index: { type: Number, required: true }
 });
 
 schema.pre('remove', next => {

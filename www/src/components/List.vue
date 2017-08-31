@@ -43,6 +43,7 @@
 				if (this.newTask.name) {
 					this.newTask.listId = listId;
 					this.newTask.boardId = this.$route.params.id;
+					this.newTask.index = this.$store.state.tasks[listId].length;
 					this.$store.dispatch('createTask', this.newTask);
 					this.newTask = {};
 				}

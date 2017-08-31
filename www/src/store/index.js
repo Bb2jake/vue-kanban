@@ -1,6 +1,7 @@
 import axios from 'axios'
 import vue from 'vue'
 import vuex from 'vuex'
+import router from '../router'
 
 let api = axios.create({
 	baseURL: 'http://localhost:3000/api/',
@@ -32,12 +33,14 @@ var store = new vuex.Store({
 		},
 		setComments(state, data) {
 			vue.set(state.comments, data.taskId, data.comments)
-			// state.comments[data.taskId] = data.comments
 		},
 		setActiveBoard(state, board) {
 			state.activeBoard = board
 		},
 		setLists(state, lists) {
+			lists.sort((a, b) => {
+				return a.index - b.index
+			})
 			state.lists = lists
 		},
 		setTasks(state, payload) {
@@ -48,6 +51,9 @@ var store = new vuex.Store({
 				let filteredTasks = tasks.filter(task => {
 					return task.listId == list._id;
 				})
+				filteredTasks.sort((a, b) => {
+					return a.index - b.index;
+				})
 				vue.set(state.tasks, list._id, filteredTasks);
 			});
 		},
@@ -57,6 +63,16 @@ var store = new vuex.Store({
 		setUser(state, payload) {
 			state.name = payload.name;
 			state.loggedIn = payload.loggedIn;
+		},
+		clearState(state) {
+			state.boards = []
+			state.activeBoard = {}
+			state.error = {}
+			state.loggedIn = false
+			state.name = ''
+			state.lists = []
+			state.tasks = {}
+			state.comments = {}
 		}
 	},
 	actions: {
@@ -212,8 +228,9 @@ var store = new vuex.Store({
 		logout({ commit, dispatch }) {
 			auth.delete('logout')
 				.then(res => {
-					commit('setBoards', [])
 					commit('setUser', { name: '', loggedIn: false })
+					commit('clearState')
+					router.push({ name: 'Boards' })
 				}).catch(err => commit('handleError', err))
 		},
 		checkForSession({ commit, dispatch }) {
@@ -227,8 +244,6 @@ var store = new vuex.Store({
 			commit('handleError', err)
 		}
 	}
-
 })
-
 
 export default store

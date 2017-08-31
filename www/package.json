@@ -15,8 +15,10 @@
     "axios": "^0.15.3",
     "jquery": "^3.2.1",
     "socket.io-client": "^1.7.3",
+    "sortable": "^2.0.0",
     "vue": "^2.1.10",
     "vue-click-outside": "^1.0.6",
+    "vue-draggable": "^1.0.0-rc.3",
     "vue-router": "^2.2.0",
     "vuex": "^2.3.1"
   },

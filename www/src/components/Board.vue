@@ -57,6 +57,7 @@
 				this.newList.name = this.newList.name.trim()
 				if (this.newList.name) {
 					this.newList.boardId = this.$route.params.id
+					this.newList.index = this.$store.state.lists.length;
 					this.$store.dispatch('createList', this.newList)
 					this.showListForm = false
 					this.newList = {}
