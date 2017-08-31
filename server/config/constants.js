@@ -14,7 +14,8 @@ const models = {
 	},
 	list: {
 		name: 'List',
-		endpoint: 'lists'
+		endpoint: 'lists',
+		useCustomRoutes: true
 	},
 	task: {
 		name: 'Task',

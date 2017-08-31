@@ -1,15 +1,15 @@
+let Tasks = require('../models/task')
 let Users = require('../models/user')
-let Comments = require ('../models/comment')
 
 module.exports = {
-	comments: {
-		path: '/tasks/:taskId/comments',
+	tasks: {
+		path: '/lists/:listId/tasks',
 		reqType: 'get',
 		method(req, res, next) {
-			let action = 'Find Comments by Task'
-			Comments.find({ taskId: req.params.taskId })
-				.then(comments => {
-                    res.send(handleResponse(action, comments))
+			let action = 'Find Tasks by List'
+			Tasks.find({ listId: req.params.listId })
+				.then(tasks => {
+                    res.send(handleResponse(action, tasks))
 				})
 				.catch(error => {
 					return next(handleResponse(action, null, error))

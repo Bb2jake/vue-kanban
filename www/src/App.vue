@@ -85,15 +85,15 @@
 		margin: 0 0 20px 0;
 	} */
 
-    .action {
+    .action, .glyphicon-trash {
         cursor: pointer;
     }
 
-    .muted {
+    .muted, .glyphicon-trash {
         opacity: 0.8;
     }
 
-    .muted:hover {
+    .muted:hover, .glyphicon-trash:hover {
         opacity: 1;
     }
 </style>
