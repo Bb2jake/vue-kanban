@@ -92,4 +92,11 @@
 	input {
 		margin-bottom: 10px;
 	}
+
+    .hidden-children .hidden-child{
+		display: none;
+	}
+	.hidden-children:hover .hidden-child{
+		display: initial;
+	}
 </style>

@@ -21,7 +21,7 @@
                                 <router-link :to="{name: 'Boards'}">Home</router-link><span class="sr-only">(current)</span>
                             </a>
                         </li>
-                        <li id="login-button" v-if="!loggedIn"><a class="action" @click="showLoginBox">Login/Register</a></li>
+                        <li id="login-button" v-if="!loggedIn"><a class="action" @click="closeLoginFormListener">Login/Register</a></li>
                         <!-- <li v-if="!loggedIn && showLogin"><a>Login/Register</a></li> -->
                         <li v-if="loggedIn"><a class="action">{{name}}</a></li>
                         <li v-if="loggedIn"><a class="action" @click="logout">Logout</a></li>
@@ -56,7 +56,6 @@
         methods: {
             showLoginBox() {
                 if (!this.listenerCaught) {
-                    this.showLogin = true
                     this.closeLoginFormListener();
                 } else {
                     this.listenerCaught = false;
@@ -68,29 +67,35 @@
             },
             // Closes the loginForm when clicking anywhere outside of it.
             closeLoginFormListener() {
-                let _this = this;
-                $(document).mouseup(function (e) {
-                    let loginForm = $('#login-parent');
-                    // if the target of the click isn't the container nor a descendant of the container
-                    if (!loginForm.is(e.target) && loginForm.has(e.target).length === 0) {
-                        _this.showLogin = false;
+                this.outsideClickOrEscapeListener('login-parent', () => {this.showLogin = false;})
+                // if (this.listenerCaught) {
+                //     this.listenerCaught = false;
+                //     return;
+                // }
 
-                        // If login button is the one clicked, consume event once
-                        let loginBtn = $('#login-button');
-                        _this.listenerCaught = loginBtn.is(e.target) || loginBtn.has(e.target).length > 0;
-                        $(document).unbind('mouseup');
-                        $(document).unbind('keyup')
-                    }
-                });
-                $(document).on('keyup', e => {
-                    if (e.keyCode == 27) {
-                        _this.showLogin = false;
-                        $(document).unbind('mouseup');
-                        $(document).unbind('keyup')
-                    }
-                });
+                // let _this = this;
+                // this.showLogin = true
+                // $(document).mouseup(e => {
+                //     let loginForm = $('#login-parent');
+                //     // if the target of the click isn't the container nor a descendant of the container
+                //     if (!loginForm.is(e.target) && loginForm.has(e.target).length === 0) {
+                //         _this.showLogin = false;
+
+                //         // If login button is the one clicked, consume event once
+                //         let loginBtn = $('#login-button');
+                //         _this.listenerCaught = loginBtn.is(e.target) || loginBtn.has(e.target).length > 0;
+                //         $(document).unbind('mouseup');
+                //         $(document).unbind('keyup')
+                //     }
+                // });
+                // $(document).on('keyup', e => {
+                //     if (e.keyCode == 27) {
+                //         _this.showLogin = false;
+                //         $(document).unbind('mouseup');
+                //         $(document).unbind('keyup')
+                //     }
+                // });
             }
-
         },
         computed: {
             loggedIn() {
