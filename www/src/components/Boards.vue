@@ -21,7 +21,7 @@
         <div v-if="showBoardForm" id="create-board-parent" class="panel panel-default">
             <div class="panel-heading">Create Board <span class="action muted" @click="hideBoardForm">x</span></div>
             <form id="create-board-form" class="panel-body" @submit.prevent="createBoard">
-                <input type="text" maxlength="50" placeholder="board name" v-model="newBoard.name" required>
+                <input ref="newBoardName" type="text" maxlength="50" placeholder="board name" v-model="newBoard.name" required>
                 <input type="text" maxlength="140" placeholder="description" v-model="newBoard.description">
                 <button class="btn">Create Board</button>
             </form>
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+    import $ from 'jquery'
+    import Vue from 'vue';
     export default {
         name: 'boards',
         data() {
@@ -63,6 +65,9 @@
                     return;
                 }
                 this.showBoardForm = true;
+                Vue.nextTick(() => {
+                    this.$refs.newBoardName.focus();
+                })
                 this.outsideClickOrEscapeListener('create-board-parent', () => { this.showBoardForm = false; }, 'open-board-form-btn', (val) => { this.eventHandled = val })
             },
             hideBoardForm() {

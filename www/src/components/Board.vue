@@ -18,7 +18,7 @@
         <div v-if="showListForm" id="create-list-parent" class="panel panel-default">
             <div class="panel-heading">Create List <span id="exit-form-btn" class="action muted" @click="hideListForm">x</span></div>
             <form id="create-list-form" class="panel-body" @submit.prevent="createList">
-                <input type="text" maxlength="50" placeholder="list name" v-model="newList.name" required>
+                <input ref="newListName" type="text" maxlength="50" placeholder="list name" v-model="newList.name" required>
                 <input type="text" maxlength="140" placeholder="description" v-model="newList.description">
                 <button class="btn">Create List</button>
             </form>
@@ -31,6 +31,7 @@
 <script>
     import $ from 'jquery'
     import List from './List'
+    import Vue from 'vue'
     export default {
         name: 'board',
         components: {
@@ -67,6 +68,9 @@
                     return;
                 }
                 this.showListForm = true;
+                Vue.nextTick(() => {
+                    this.$refs.newListName.focus();
+                })
                 this.outsideClickOrEscapeListener('create-list-parent', () => { this.showListForm = false; }, 'open-form-btn', (val) => { this.eventHandled = val })
             },
             hideListForm() {
