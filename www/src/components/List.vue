@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="panel panel-default list-card">
+    <div class="panel panel-default list-card hidden-children">
       <h4 class="panel-header"><strong>{{list.name}}:</strong> {{list.description}}</h4>
       <div v-for="task in list.tasks">
         <Task :task="task"></Task>
@@ -14,7 +14,7 @@
           </form>
         </div>
       </div>
-      <span class="glyphicon glyphicon-trash" @click="removeList(list)"></span>
+      <span class="glyphicon glyphicon-trash hidden-child" @click="removeList(list)"></span>
     </div>
   </div>
 </template>
@@ -54,7 +54,11 @@
 </script>
 
 
-<style>
-
-
+<style scoped>
+	.hidden-children .hidden-child{
+		display: none;
+	}
+	.hidden-children:hover .hidden-child{
+		display: initial;
+	}
 </style>

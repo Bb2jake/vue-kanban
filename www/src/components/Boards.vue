@@ -3,9 +3,9 @@
 		<div class="row">
 			<div class="col-xs-12 col-md-6 col-lg-3" v-for="board in boards">
 				<router-link :to="'/boards/'+board._id">
-					<div class="panel panel-default board-card">
+					<div class="panel panel-default hidden-children board-card">
 						<h4>{{board.name}}</h4>
-						<span class="glyphicon glyphicon-trash" @click.prevent.stop ="removeBoard(board)"></span>
+						<span class="glyphicon glyphicon-trash hidden-child" @click.prevent.stop ="removeBoard(board)"></span>
 					</div>
 				</router-link>
 			</div>
@@ -92,10 +92,4 @@
 	input {
 		margin-bottom: 10px;
 	}
-	.board-card span{
-		display: none;
-	}
-	.board-card:hover span{
-		display: initial;
-	} 
 </style>

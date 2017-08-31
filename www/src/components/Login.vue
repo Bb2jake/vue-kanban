@@ -37,9 +37,6 @@
 			}
 		},
 		methods: {
-			test() {
-				console.log('clicked outside')
-			},
 			login() {
 				this.trimInputs(this.loginInfo)
 				if (this.loginInfo.name) {
@@ -82,7 +79,7 @@
 				this.registerInfo.email = '';
 				this.registerInfo.password = '';
 				this.registerInfo.passwordVerif = '';
-			}
+			},
 		}
 	}
 

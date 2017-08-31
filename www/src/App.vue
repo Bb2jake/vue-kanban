@@ -25,7 +25,8 @@
 								<router-link :to="{name: 'MyTunes.Playlists'}">MyTunes</router-link>
 							</a>
 						</li> -->
-						<li v-if="!loggedIn"><a class="action" @click="toggleLoginBox">Login/Register</a></li>
+						<li v-if="!loggedIn"><a class="action" @click="showLoginBox">Login/Register</a></li>
+						<!-- <li v-if="!loggedIn && showLogin"><a>Login/Register</a></li> -->
 						<li v-if="loggedIn"><a class="action">{{name}}</a></li>
 						<li v-if="loggedIn"><a class="action" @click="logout">Logout</a></li>
 					</ul>
@@ -41,7 +42,7 @@
 <script>
 	import Error from './components/Error'
 	import Login from './components/Login'
-
+	import $ from 'jquery'
 	export default {
 		name: 'app',
 		components: {
@@ -56,13 +57,33 @@
 			this.$store.dispatch('checkForSession')
 		},
 		methods: {
-			toggleLoginBox() {
-				this.showLogin = !this.showLogin;
+			showLoginBox() {
+				// var listening
+				if (!this.showLogin) {
+
+					this.showLogin = true
+					// if (this.showLogin)
+					this.closeLoginFormListener();
+				}
 			},
 			logout() {
 				this.$store.dispatch('logout')
 				this.showLogin = false;
+			},
+			// Closes the loginForm when clicking anywhere outside of it.
+			closeLoginFormListener() {
+				let _this = this;
+				$(document).mouseup(function (e) {
+					var loginForm = $("#login-parent");
+					// if the target of the click isn't the container nor a descendant of the container
+					if (!loginForm.is(e.target) && loginForm.has(e.target).length === 0) {
+						_this.showLogin = false;
+						$(document).unbind('mouseup');
+						// setTimeout(listenForLoginButtonClick, 1);
+					}
+				});
 			}
+
 		},
 		computed: {
 			loggedIn() {
