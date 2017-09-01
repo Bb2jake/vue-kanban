@@ -22,7 +22,6 @@ Object.keys(models).forEach((k) => {
 			})
 		}
 	}
-
 });
 
 module.exports = api

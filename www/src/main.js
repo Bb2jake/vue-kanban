@@ -6,7 +6,7 @@ import router from './router'
 import io from 'socket.io-client'
 import store from './store'
 import $ from 'jquery'
-
+import draggable from 'vuedraggable'
 let socket = io('http://localhost:3000')
 
 socket.on('CONNECTED', function (data) {
@@ -50,7 +50,8 @@ Vue.mixin({
 new Vue({
     el: '#app',
     store,
-    router,
+	router,
+	draggable,
     template: '<App/>',
     components: { App },
 })

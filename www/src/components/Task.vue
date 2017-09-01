@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="task">
 		<p class="task-hidden-children">
 			<span class="action" @click="toggleComments">{{task.name}}</span>
 			<span class="glyphicon glyphicon-trash task-hidden-child" @click="removeTask"></span>

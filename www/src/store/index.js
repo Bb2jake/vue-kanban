@@ -57,6 +57,11 @@ var store = new vuex.Store({
 				vue.set(state.tasks, list._id, filteredTasks);
 			});
 		},
+		setTaskOrder(state, listId) {
+			for (let i = 0; i < state.tasks[listId].length; i++) {
+				state.tasks[listId][i].index = i;
+			}
+		},
 		handleError(state, err) {
 			state.error = err
 		},
@@ -202,6 +207,20 @@ var store = new vuex.Store({
 				.catch(err => {
 					commit('handleError', err)
 				})
+		},
+		setTaskOrder({ commit, dispatch }, { listId, tasks }) {
+			// console.log(tasks)
+			commit('setTaskOrder', listId);
+			// console.log(tasks)
+			// tasks.forEach(function (task) {
+			api.put('update-tasks', tasks)
+				.then(res => {
+					// Do nothing, more or less.
+				})
+				.catch(err => {
+					commit('handleError', err)
+				})
+			// }, this);
 		},
 
 		// USER ACTIONS
