@@ -96,6 +96,14 @@
     .muted:hover, .glyphicon-trash:hover {
         opacity: 1;
     }
+
+	.moveable {
+		cursor: move;
+	}
+
+	.dragArea {
+		min-height: 10px;
+	}
 </style>
 
 <style scoped>

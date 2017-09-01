@@ -4,19 +4,21 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-12">
-						<form id="add-collaborator-form" @submit.prevent="addCollaborator">
-							<input type="text" maxlength="16" placeholder="Add Collaborator" v-model="newCollaborator" required>
-							<button class="btn">Add</button>
-						</form>
+					<form id="add-collaborator-form" @submit.prevent="addCollaborator">
+						<input type="text" maxlength="16" placeholder="Add Collaborator" v-model="newCollaborator" required>
+						<button class="btn">Add</button>
+					</form>
 				</div>
 			</div>
 		</div>
 		<div class="jumbotron">
 			<div class="container">
 				<div class="row">
-					<div class="col-xs-12 col-md-6 col-lg-3" v-for="list in lists">
-						<List :list="list"></List>
-					</div>
+					<Draggable class="moveable dragArea" v-model="lists" :options="{draggable: '.list-item', group: 'lists'}" @end="onEnd">
+						<div class="col-xs-12 col-md-6 col-lg-3 list-item" v-for="list in lists">
+							<List :list="list"></List>
+						</div>
+					</Draggable>
 					<div class="col-xs-12 col-md-6 col-lg-3">
 						<div id="open-form-btn" @click="closeFormListener" class="panel panel-default action muted list-card">
 							<h4>Create new list</h4>
@@ -42,12 +44,12 @@
 	import $ from 'jquery'
 	import List from './List'
 	import Vue from 'vue'
+	import Draggable from 'vuedraggable'
 	export default {
 		name: 'board',
 		components: {
-			List
+			List, Draggable
 		},
-
 		data() {
 			return {
 				newList: {
@@ -76,8 +78,8 @@
 			},
 			addCollaborator() {
 				this.newCollaborator = this.newCollaborator.trim()
-				if (this.newCollaborator){
-					
+				if (this.newCollaborator) {
+
 				}
 			},
 			closeFormListener() {
@@ -94,14 +96,22 @@
 			hideListForm() {
 				this.showListForm = false;
 				this.unbindListeners();
+			},
+			onEnd(e) {
+				this.$store.dispatch('setListIndexes', { boardId: this.$route.params.id, lists: this.lists })
 			}
 		},
 		computed: {
 			board() {
 				return this.$store.state.activeBoard
 			},
-			lists() {
-				return this.$store.state.lists
+			lists: {
+				get() {
+					return this.$store.state.lists
+				},
+				set(value) {
+					this.$store.commit('setLists', value)
+				}
 			}
 		}
 	}

@@ -2,8 +2,8 @@
 	<div>
 		<div class="panel panel-default list-card hidden-children">
 			<h4 class="panel-header"><strong>{{list.name}}:</strong> {{list.description}}</h4>
-			<Draggable v-model="tasks" :options="{draggable: '.task-item', group: 'tasks'}" :move="onMove" @end="onEnd">
-				<div v-for="task in tasks" class="task-item" :id="task._id">
+			<Draggable class="dragArea" v-model="tasks" :options="{draggable: '.task-item', group: 'tasks'}" :move="onMove" @end="onEnd">
+				<div v-for="task in tasks" class="task-item">
 					<Task :task="task"></Task>
 				</div>
 			</Draggable>
@@ -55,6 +55,7 @@
 			onMove(e, o) {
 				if (!e.relatedContext || !e.relatedContext.element)
 					return
+					
 				if (!this.dragStartListId)
 					this.dragStartListId = e.draggedContext.element.listId;
 
@@ -62,6 +63,9 @@
 				this.dragEndListId = e.relatedContext.element.listId
 			},
 			onEnd(e) {
+				if (!this.dragEndListId && !this.dragStartListId)
+					return
+
 				this.$store.dispatch('setTaskIndexes', { listId: this.dragStartListId, tasks: this.$store.state.tasks[this.dragStartListId] })
 				if (this.dragStartListId != this.dragEndListId)
 					this.$store.dispatch('setTaskIndexes', { listId: this.dragEndListId, tasks: this.$store.state.tasks[this.dragEndListId] })
