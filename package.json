@@ -2,9 +2,9 @@
 	"name": "vue-kanban",
 	"version": "1.0.0",
 	"description": "A non trivial application utilizing vuejs and node",
-	"main": "server/config/dev-server.js",
+	"main": "server/index.js",
 	"scripts": {
-		"start": "node server/config/dev-server.js"
+		"start": "node server/index.js"
 	},
 	"engines": {
 		"node": "8",
