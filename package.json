@@ -4,9 +4,7 @@
   "description": "A non trivial application utilizing vuejs and node",
   "main": "server/config/dev-server.js",
   "scripts": {
-	// "dev": "node server/config/dev-server.js",
     "start": "node server/config/dev-server.js"
-    // "build": "node build/build.js"
 },
   "engines": {
 	  "node":"8",
