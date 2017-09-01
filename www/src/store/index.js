@@ -46,11 +46,6 @@ var store = new vuex.Store({
 		setLists(state, lists) {
 			state.lists = lists
 		},
-		setListIndexes(state) {
-			for (let i = 0; i < state.lists.length; i++) {
-				state.lists[i].index = i;
-			}
-		},
 		setTasks(state, payload) {
 			state.tasks[payload.listId] = payload.tasks
 		},
@@ -64,10 +59,6 @@ var store = new vuex.Store({
 				})
 				vue.set(state.tasks, list._id, filteredTasks);
 			});
-		},
-		setTaskIndexes(state, listId) {
-			for (let i = 0; i < state.tasks[listId].length; i++)
-				state.tasks[listId][i].index = i;
 		},
 		handleError(state, err) {
 			state.error = err
@@ -216,8 +207,15 @@ var store = new vuex.Store({
 				})
 		},
 		setTaskIndexes({ commit, dispatch }, { listId, tasks }) {
-			commit('setTaskIndexes', listId);
-			tasks.forEach(function (task) {
+			let changedTasks = [];
+			for (let i = 0; i < tasks.length; i++) {
+				if (tasks[i].index != i) {
+					tasks[i].index = i;
+					changedTasks.push(tasks[i])
+				}
+			}
+
+			changedTasks.forEach(function (task) {
 				api.put('tasks/' + task._id, task)
 					.then(res => {
 
@@ -236,8 +234,15 @@ var store = new vuex.Store({
 			//     })
 		},
 		setListIndexes({ commit, dispatch }, { boardId, lists }) {
-			commit('setListIndexes')
-			lists.forEach(function (list) {
+			let changedLists = []
+			for (let i = 0; i < lists.length; i++) {
+				let list = lists[i]
+				if (list.index != i) {
+					list.index = i;
+					changedLists.push(list)
+				}
+			}
+			changedLists.forEach(function (list) {
 				api.put('lists/' + list._id, list)
 					.then(res => {
 
