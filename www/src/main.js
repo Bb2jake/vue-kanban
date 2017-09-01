@@ -3,16 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 import store from './store'
 import $ from 'jquery'
 import draggable from 'vuedraggable'
 // let socket = io('http://localhost:3000')
 
-socket.on('CONNECTED', function (data) {
-    console.log(data)
-    socket.emit('update', { data: 'blarg', boardId: '3289748320' })
-})
+// socket.on('CONNECTED', function (data) {
+//     console.log(data)
+//     socket.emit('update', { data: 'blarg', boardId: '3289748320' })
+// })
 
 Vue.mixin({
     methods: {
