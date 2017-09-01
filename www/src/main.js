@@ -7,7 +7,7 @@ import io from 'socket.io-client'
 import store from './store'
 import $ from 'jquery'
 import draggable from 'vuedraggable'
-let socket = io('http://localhost:3000')
+// let socket = io('http://localhost:3000')
 
 socket.on('CONNECTED', function (data) {
     console.log(data)
