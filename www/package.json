@@ -20,6 +20,7 @@
     "vue-click-outside": "^1.0.6",
     "vue-draggable": "^1.0.0-rc.3",
     "vue-router": "^2.2.0",
+    "vuedraggable": "^2.14.1",
     "vuex": "^2.3.1"
   },
   "devDependencies": {

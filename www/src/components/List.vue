@@ -2,9 +2,11 @@
 	<div>
 		<div class="panel panel-default list-card hidden-children">
 			<h4 class="panel-header"><strong>{{list.name}}:</strong> {{list.description}}</h4>
-			<div v-for="task in tasks">
-				<Task :task="task"></Task>
-			</div>
+			<Draggable v-model="tasks" :options="{draggable: '.task-item', group: 'tasks'}" :move="onMove" @end="onEnd">
+				<div v-for="task in tasks" class="task-item" :id="task._id">
+					<Task :task="task"></Task>
+				</div>
+			</Draggable>
 			<div class="panel-body">
 				<div class="panel panel-default">
 					<form @submit.prevent="createTask(list._id)">
@@ -21,9 +23,10 @@
 
 <script>
 	import Task from './Task'
+	import Draggable from 'vuedraggable'
 	export default {
 		components: {
-			Task
+			Task, Draggable
 		},
 		props: ['list'],
 		data() {
@@ -32,6 +35,8 @@
 					// name: '',
 					// description: ''
 				},
+				dragStartListId: '',
+				dragEndListId: ''
 			}
 		},
 		methods: {
@@ -48,10 +53,32 @@
 					this.newTask = {};
 				}
 			},
+			onMove(e, o) {
+				if (!e.relatedContext || !e.relatedContext.element)
+					return
+				if (!this.dragStartListId)
+					this.dragStartListId = e.draggedContext.element.listId;
+
+				e.draggedContext.element.listId = e.relatedContext.element.listId
+				this.dragEndListId = e.relatedContext.element.listId
+			},
+			onEnd(e) {
+				this.$store.dispatch('setTaskIndexes', { listId: this.dragStartListId, tasks: this.$store.state.tasks[this.dragStartListId] })
+				if (this.dragStartListId != this.dragEndListId)
+					this.$store.dispatch('setTaskIndexes', { listId: this.dragEndListId, tasks: this.$store.state.tasks[this.dragEndListId] })
+
+				this.dragStartListId = '';
+				this.dragEndListId = '';
+			}
 		},
 		computed: {
-			tasks() {
-				return this.$store.state.tasks[this.list._id]
+			tasks: {
+				get() {
+					return this.$store.state.tasks[this.list._id]
+				},
+				set(value) {
+					this.$store.commit('setTasks', { listId: this.list._id, tasks: value })
+				}
 			}
 		}
 	}
