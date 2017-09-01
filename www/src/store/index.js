@@ -4,7 +4,7 @@ import vuex from 'vuex'
 import router from '../router'
 
 let deployed = !window.location.host.includes('localhost')
-let baseUrl = deployed ? 'https://super-kanban.herokuapp.com/' : 'http//localhost:3000/'
+let baseUrl = deployed ? 'https://super-kanban.herokuapp.com/' : 'http://localhost:3000/'
 let api = axios.create({
 	baseURL: baseUrl + 'api/',
 	timeout: 2000,
@@ -173,13 +173,13 @@ var store = new vuex.Store({
 				})
 		},
 		addCollaborator({ commit, dispatch }, payload) {
-			// api.put('boards/' + payload.boardId + '/collaborators', payload.collaborator)
-			// .then(res => {
-
-			// })
-			// .catch(err => {
-			// 	commit('handleError', err)
-			// })
+			api.put('boards/' + payload.boardId + '/collaborators', payload.collaborator)
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
 		},
 		removeBoard({ commit, dispatch }, board) {
 			api.delete('boards/' + board._id)

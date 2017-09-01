@@ -44,12 +44,19 @@ module.exports = {
 				})
 				.then(user => {
 
-					Boards.findByIdAndUpdate(req.params.boardId)
-						.then(task => {
-							console.log(task)
+					Boards.findById(req.params.boardId)
+						.then(board => {
+							board.collaborators.push(user._id)
+							board.save()
+								.then(res => {
+									console.log(res)
+								})
+								.catch(error => {
+									return next(handleResponse(action, null, error))
+								})
 						})
 						.catch(error => {
-							console.log(error)
+							return next(handleResponse(action, null, error))
 						})
 				})
 				.catch(error => {
