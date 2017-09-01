@@ -78,8 +78,9 @@
 			},
 			addCollaborator() {
 				this.newCollaborator = this.newCollaborator.trim()
-				if (this.newCollaborator) {
-
+				if(this.newCollaborator) {
+					this.$store.dispatch('addCollaborator', {collaborator: this.newCollaborator, boardId: this.$route.params.id})
+					this.newCollaborator = ''
 				}
 			},
 			closeFormListener() {

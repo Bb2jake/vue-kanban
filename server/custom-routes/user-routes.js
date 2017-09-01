@@ -1,4 +1,5 @@
 let Boards = require('../models/board')
+let Users = require('../models/user')
 
 module.exports = {
 	userBoards: {
@@ -25,6 +26,29 @@ module.exports = {
 					return next(handleResponse(action, null, error))
 				})
 		}
+	},
+	
+	collaborators: {
+		path: '/boards/:boardId/collaborators',
+        reqType: 'put',
+        method(req, res, next) {
+			let action = 'Add a Collaborator by Username'
+			Users.find({name: req.body})
+				.then(user => {
+					
+					Boards.findByIdAndUpdate(req.params.boardId)
+						.then(task => {
+							console.log(task)
+						})
+						.catch(error => {
+							console.log(error)
+							// return next(handleResponse(action, null, error))
+						})
+				})
+				.catch(error => {
+					return next(handleResponse(action, null, error))
+				})
+        }
 	}
 }
 

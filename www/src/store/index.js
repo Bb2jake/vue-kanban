@@ -170,6 +170,15 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
+		addCollaborator({ commit, dispatch }, payload) {
+			// api.put('boards/' + payload.boardId + '/collaborators', payload.collaborator)
+			// .then(res => {
+
+			// })
+			// .catch(err => {
+			// 	commit('handleError', err)
+			// })
+		},
 		removeBoard({ commit, dispatch }, board) {
 			api.delete('boards/' + board._id)
 				.then(res => {
