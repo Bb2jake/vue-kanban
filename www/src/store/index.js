@@ -217,14 +217,17 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
-		setTaskIndexes({ commit, dispatch }, { listId, tasks }) {
+		setTaskIndexes({ commit, dispatch }, { listId, tasks, task }) {
 			let changedTasks = [];
 			for (let i = 0; i < tasks.length; i++) {
 				if (tasks[i].index != i) {
 					tasks[i].index = i;
 					changedTasks.push(tasks[i])
 				}
-			}
+            }
+            if (task)
+                if(!changedTasks.includes(task))
+                    changedTasks.push(task)
 
 			changedTasks.forEach(function (task) {
 				api.put('tasks/' + task._id, task)
@@ -235,14 +238,6 @@ var store = new vuex.Store({
 						commit('handleError', err)
 					})
 			}, this);
-			// api.put('update-tasks', tasks)
-			//     .then(res => {
-			//         console.log('Updated task indexes', res)
-			//     })
-			//     .catch(err => {
-			//         console.log(err)
-			//         commit('handleError', err);
-			//     })
 		},
 		setListIndexes({ commit, dispatch }, { boardId, lists }) {
 			let changedLists = []
@@ -263,7 +258,7 @@ var store = new vuex.Store({
 					})
 			}, this);
 		},
-		// USER ACTIONS
+		// USER AUTH ACTIONS
 		login({ commit, dispatch }, payload) {
 			auth.post('login/', payload)
 				.then(res => {
