@@ -50,7 +50,7 @@
                 eventHandled: false
             }
         },
-        mounted() {
+        beforeMount() {
             this.$store.dispatch('checkForSession')
         },
         methods: {

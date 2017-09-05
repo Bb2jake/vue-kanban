@@ -206,7 +206,7 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
-		setTaskIndexes({ commit, dispatch }, { listId, tasks }) {
+		setTaskIndexes({ commit, dispatch }, { listId, tasks, task }) {
 			let changedTasks = [];
 			for (let i = 0; i < tasks.length; i++) {
 				if (tasks[i].index != i) {
@@ -214,6 +214,9 @@ var store = new vuex.Store({
 					changedTasks.push(tasks[i])
 				}
 			}
+			if (task)
+				if (!changedTasks.includes(task))
+					changedTasks.push(task)
 
 			changedTasks.forEach(function (task) {
 				api.put('tasks/' + task._id, task)
