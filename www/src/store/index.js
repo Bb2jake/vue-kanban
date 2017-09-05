@@ -3,14 +3,16 @@ import vue from 'vue'
 import vuex from 'vuex'
 import router from '../router'
 
+let deployed = !window.location.host.includes('localhost')
+let baseUrl = deployed ? 'https://super-kanban.herokuapp.com/' : 'http://localhost:3000/'
 let api = axios.create({
-	baseURL: 'http://localhost:3000/api/',
+	baseURL: baseUrl + 'api/',
 	timeout: 2000,
 	withCredentials: true
 })
 
 let auth = axios.create({
-	baseURL: 'http://localhost:3000/',
+	baseURL: baseUrl,
 	timeout: 2000,
 	withCredentials: true
 })
@@ -170,6 +172,15 @@ var store = new vuex.Store({
 					commit('handleError', err)
 				})
 		},
+		addCollaborator({ commit, dispatch }, payload) {
+			api.put('boards/' + payload.boardId + '/collaborators', payload.collaborator)
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				commit('handleError', err)
+			})
+		},
 		removeBoard({ commit, dispatch }, board) {
 			api.delete('boards/' + board._id)
 				.then(res => {
@@ -213,10 +224,10 @@ var store = new vuex.Store({
 					tasks[i].index = i;
 					changedTasks.push(tasks[i])
 				}
-			}
-			if (task)
-				if (!changedTasks.includes(task))
-					changedTasks.push(task)
+            }
+            if (task)
+                if(!changedTasks.includes(task))
+                    changedTasks.push(task)
 
 			changedTasks.forEach(function (task) {
 				api.put('tasks/' + task._id, task)
@@ -227,14 +238,6 @@ var store = new vuex.Store({
 						commit('handleError', err)
 					})
 			}, this);
-			// api.put('update-tasks', tasks)
-			//     .then(res => {
-			//         console.log('Updated task indexes', res)
-			//     })
-			//     .catch(err => {
-			//         console.log(err)
-			//         commit('handleError', err);
-			//     })
 		},
 		setListIndexes({ commit, dispatch }, { boardId, lists }) {
 			let changedLists = []
@@ -255,7 +258,7 @@ var store = new vuex.Store({
 					})
 			}, this);
 		},
-		// USER ACTIONS
+		// USER AUTH ACTIONS
 		login({ commit, dispatch }, payload) {
 			auth.post('login/', payload)
 				.then(res => {

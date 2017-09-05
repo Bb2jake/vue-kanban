@@ -1,4 +1,5 @@
 let Boards = require('../models/board')
+let Users = require('../models/user')
 
 module.exports = {
 	userBoards: {
@@ -6,7 +7,9 @@ module.exports = {
 		reqType: 'get',
 		method(req, res, next) {
 			let action = 'Find User Boards'
-			Boards.find({ creatorId: req.session.uid })
+			Boards.find({
+					creatorId: req.session.uid
+				})
 				.then(boards => {
 					res.send(handleResponse(action, boards))
 				}).catch(error => {
@@ -18,10 +21,45 @@ module.exports = {
 		path: '/sharedBoards',
 		reqType: 'get',
 		method(req, res, next) {
-			Boards.find({ collaborators: { $in: req.session.uid } })
+			Boards.find({
+					collaborators: {
+						$in: req.session.uid
+					}
+				})
 				.then(boards => {
 					res.send(handleResponse(action, boards))
 				}).catch(error => {
+					return next(handleResponse(action, null, error))
+				})
+		}
+	},
+
+	collaborators: {
+		path: '/boards/:boardId/collaborators',
+		reqType: 'put',
+		method(req, res, next) {
+			let action = 'Add a Collaborator by Username'
+			Users.find({
+					name: req.body
+				})
+				.then(user => {
+
+					Boards.findById(req.params.boardId)
+						.then(board => {
+							board.collaborators.push(user._id)
+							board.save()
+								.then(res => {
+									console.log(res)
+								})
+								.catch(error => {
+									return next(handleResponse(action, null, error))
+								})
+						})
+						.catch(error => {
+							return next(handleResponse(action, null, error))
+						})
+				})
+				.catch(error => {
 					return next(handleResponse(action, null, error))
 				})
 		}

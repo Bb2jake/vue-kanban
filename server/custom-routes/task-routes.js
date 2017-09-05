@@ -21,17 +21,6 @@ module.exports = {
         reqType: 'put',
         method(req, res, next) {
             let action = 'Update many tasks'
-            // let ids = [];
-            // let indexes = []
-            // req.body.forEach(function (task) {
-            //     ids.push(task._id);
-            //     indexes.push(task.index)
-            // }, this);
-
-            // Tasks.update({ id: { '$in': ids } }, { index: { '$in': indexes } }, { multi: true }, (err, raw) => {
-            //     if (err)
-            //         console.log(err)
-            // })
             req.body.forEach(function (task) {
                 Tasks.findByIdAndUpdate(task._id, task)
                     .then(task => {
