@@ -34,36 +34,6 @@ module.exports = {
 		}
 	},
 
-	collaborators: {
-		path: '/boards/:boardId/collaborators',
-		reqType: 'put',
-		method(req, res, next) {
-			let action = 'Add a Collaborator by Username'
-			Users.find({
-					name: req.body
-				})
-				.then(user => {
-
-					Boards.findById(req.params.boardId)
-						.then(board => {
-							board.collaborators.push(user._id)
-							board.save()
-								.then(res => {
-									console.log(res)
-								})
-								.catch(error => {
-									return next(handleResponse(action, null, error))
-								})
-						})
-						.catch(error => {
-							return next(handleResponse(action, null, error))
-						})
-				})
-				.catch(error => {
-					return next(handleResponse(action, null, error))
-				})
-		}
-	}
 }
 
 function handleResponse(action, data, error) {
