@@ -35,7 +35,6 @@ const models = {
 	}
 }
 
-
 module.exports = {
 	actions,
 	models

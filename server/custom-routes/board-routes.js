@@ -38,8 +38,8 @@ module.exports = {
 		method(req, res, next) {
 			let action = 'Add a Collaborator by Username'
 			Users.find({
-					name: req.body
-				})
+				name: req.body
+			})
 				.then(user => {
 
 					Boards.findById(req.params.boardId)

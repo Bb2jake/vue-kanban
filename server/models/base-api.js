@@ -28,17 +28,18 @@ function API(model, schema) {
 					return next(handleResponse(actions.find, null, error))
 				})
 		} else {
-			schema.find(params, query)
-				.populate(query)
-				.then(data => {
-					var result = handleResponse(actions.findAll, data);
-					result.query = query
-					result.params = params
-					return res.send(result)
-				})
-				.catch((error) => {
-					return next(handleResponse(actions.findAll, null, error))
-				})
+			// 	schema.find(params, query)
+			// 		.populate(query)
+			// 		.then(data => {
+			// 			var result = handleResponse(actions.findAll, data);
+			// 			result.query = query
+			// 			result.params = params
+			// 			return res.send(result)
+			// 		})
+			// 		.catch((error) => {
+			// 			return next(handleResponse(actions.findAll, null, error))
+			// 		})
+			return res.send(handleResponse(actions.find, null))
 		}
 	}
 
@@ -66,9 +67,18 @@ function API(model, schema) {
 			return next(handleResponse(action, null, { error: { message: 'Invalid request no id provided' } }))
 		}
 
-		schema.findOneAndUpdate({ _id: id }, req.body)
+		schema.findById(id)
 			.then(data => {
-				return res.send(handleResponse(action, { message: 'Successfully updated' }))
+				if (data.creatorId.toString() != req.session.uid.toString()) {
+					return next(handleResponse(action, null, { error: { message: 'Not authorized' } }))
+				}
+				data.update(req.body)
+					.then(() => {
+						return res.send(handleResponse(action, { message: 'Successfully updated' }))
+					})
+					.catch(error => {
+						return next(handleResponse(action, null, error))
+					})
 			})
 			.catch(error => {
 				return next(handleResponse(action, null, error))
@@ -83,9 +93,20 @@ function API(model, schema) {
 			return next(handleResponse(action, null, { error: { message: 'Invalid request no id provided' } }))
 		}
 
-		schema.findOneAndRemove({ _id: id }).then(function (data) {
-			return res.send(handleResponse(action, data))
-		})
+		schema.findById(id)
+			.then(data => {
+				if (data.creatorId.toString() != req.session.uid.toString()) {
+					return next(handleResponse(action, null, { error: { message: 'Not authorized' } }))
+				}
+
+				data.remove()
+					.then(() => {
+						return res.send(handleResponse(action, data))
+					})
+					.catch(error => {
+						return next(handleResponse(action, null, error))
+					})
+			})
 			.catch(error => {
 				return next(handleResponse(action, null, error))
 			})

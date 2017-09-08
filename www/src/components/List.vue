@@ -2,7 +2,8 @@
 	<div>
 		<div class="panel panel-default list-card hidden-children">
 			<h4 class="panel-header"><strong>{{list.name}}:</strong> {{list.description}}</h4>
-			<Draggable :id="list._id" class="dragArea" v-model="tasks" :options="{draggable: '.task-item', group: 'tasks'}" :move="onMove" @end="onEnd">
+			<Draggable :id="list._id" class="dragArea" v-model="tasks" :options="{draggable: '.task-item', group: 'tasks'}" :move="onMove"
+			 @end="onEnd">
 				<div v-for="task in tasks" class="task-item">
 					<Task :task="task"></Task>
 				</div>
@@ -31,12 +32,12 @@
 		data() {
 			return {
 				newTask: {
-					// name: '',
-					// description: ''
+					name: '',
+					description: ''
 				},
 				dragStartListId: '',
-                dragEndListId: '',
-                draggedTask: null
+				dragEndListId: '',
+				draggedTask: null
 			}
 		},
 		methods: {
@@ -49,8 +50,9 @@
 					this.newTask.listId = listId;
 					this.newTask.boardId = this.$route.params.id;
 					this.newTask.index = this.$store.state.tasks[listId].length;
-					this.$store.dispatch('createTask', this.newTask);
-					this.newTask = {};
+					this.$store.dispatch('createTask', JSON.parse(JSON.stringify(this.newTask)));
+					this.newTask.name = '';
+					this.newTask.description = '';
 				}
 			},
 			onMove(e, o) {
@@ -83,8 +85,8 @@
 					this.$store.dispatch('setTaskIndexes', { listId: this.dragEndListId, tasks: this.$store.state.tasks[this.dragEndListId], task: this.draggedTask })
 
 				this.dragStartListId = '';
-                this.dragEndListId = '';
-                this.draggedTask = null;
+				this.dragEndListId = '';
+				this.draggedTask = null;
 			}
 		},
 		computed: {

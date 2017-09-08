@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<h3>{{board.name}}</h3>
+		<h3 class="hidden-children">{{board.name}}
+			<span class="glyphicon glyphicon-pencil hidden-child action muted" @click="showUpdateBoardForm"></span>		
+		</h3>
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-12">
@@ -53,8 +55,8 @@
 		data() {
 			return {
 				newList: {
-					// name: '',
-					// description: ''
+					name: '',
+					description: ''
 				},
 				newCollaborator: '',
 				showListForm: false,
@@ -71,9 +73,11 @@
 				if (this.newList.name) {
 					this.newList.boardId = this.$route.params.id
 					this.newList.index = this.$store.state.lists.length;
-					this.$store.dispatch('createList', this.newList)
+					this.$store.dispatch('createList', JSON.parse(JSON.stringify(this.newList)))
 					this.showListForm = false
-					this.newList = {}
+					this.unbindListeners();
+					this.newList.name = '';
+					this.newList.description = '';
 				}
 			},
 			addCollaborator() {
@@ -97,6 +101,9 @@
 			hideListForm() {
 				this.showListForm = false;
 				this.unbindListeners();
+			},
+			showUpdateBoardForm() {
+
 			},
 			onEnd(e) {
 				this.$store.dispatch('setListIndexes', { boardId: this.$route.params.id, lists: this.lists })
@@ -146,4 +153,12 @@
 	input {
 		margin-bottom: 10px;
 	}
+
+	.hidden-children .hidden-child {
+        display: none;
+    }
+
+    .hidden-children:hover .hidden-child {
+		display: initial;
+    }
 </style>
